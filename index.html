@@ -7,30 +7,23 @@
 <style>
   body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     background: radial-gradient(circle at top, #111, #000);
-    color: #ffd700;
+    color: gold;
     display: flex;
     justify-content: center;
     padding: 25px;
   }
 
-  .container {
-    width: 100%;
-    max-width: 650px;
-  }
+  .container { width: 100%; max-width: 650px; }
 
-  /* GLASS CARD */
   .card {
-    background: rgba(20, 20, 20, 0.9);
-    border: 1px solid rgba(255, 215, 0, 0.2);
+    background: rgba(20, 20, 20, 0.95);
     border-radius: 18px;
     padding: 20px;
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.05);
-    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 215, 0, 0.2);
   }
 
-  /* TABS */
   .tabs {
     display: flex;
     gap: 10px;
@@ -42,17 +35,15 @@
     background: #1a1a1a;
     border: 1px solid #333;
     border-radius: 12px;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
   }
 
   .tab.active {
     background: gold;
     color: black;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
   }
 
   .tab input {
@@ -63,15 +54,11 @@
     text-align: center;
     font-weight: bold;
     outline: none;
+    font-size: 14px;
   }
 
-  /* TITLE */
-  h1 {
-    margin: 10px 0;
-    font-size: 26px;
-  }
+  h1 { margin: 10px 0; }
 
-  /* INPUT */
   input#cycleInput {
     width: 100%;
     font-size: 34px;
@@ -80,18 +67,9 @@
     border: 1px solid #333;
     background: #0d0d0d;
     color: gold;
-    outline: none;
-  }
-
-  /* PROGRESS */
-  .percent {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #ccc;
   }
 
   .bar {
-    width: 100%;
     height: 14px;
     background: #222;
     border-radius: 20px;
@@ -101,100 +79,61 @@
 
   .fill {
     height: 100%;
-    background: linear-gradient(90deg, #ffd700, #ffb300);
+    background: gold;
     width: 0%;
-    transition: width 0.4s ease;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    transition: width 0.3s;
   }
 
-  /* BUTTONS */
-  .row {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-  }
+  .row { display: flex; gap: 10px; margin-top: 15px; }
 
   button {
     flex: 1;
     padding: 12px;
-    border: none;
     border-radius: 12px;
+    border: none;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.2s;
   }
 
-  .save {
-    background: gold;
-    color: black;
-  }
+  .save { background: gold; }
+  .reset { background: darkred; color: white; }
 
-  .save:hover {
-    transform: scale(1.03);
-  }
-
-  .reset {
-    background: #8b0000;
-    color: white;
-  }
-
-  .reset:hover {
-    transform: scale(1.03);
-  }
-
-  /* TOTAL */
-  .total {
-    margin-top: 10px;
-    color: #aaa;
-    font-size: 14px;
-  }
-
-  /* LOGS */
   .log {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
-    margin-top: 6px;
-    background: #111;
-    border-radius: 10px;
-    border: 1px solid #222;
+    padding: 8px;
+    border-bottom: 1px solid #222;
   }
-
 </style>
 </head>
 
 <body>
 
 <div class="container">
+<div class="card">
 
-  <div class="card">
+  <div class="tabs" id="tabs"></div>
 
-    <!-- Tabs -->
-    <div class="tabs" id="tabs"></div>
+  <h1 id="title"></h1>
 
-    <!-- Title -->
-    <h1 id="title"></h1>
+  <input id="cycleInput" oninput="updateInput()" placeholder="Enter cycles" />
 
-    <!-- Input -->
-    <input id="cycleInput" placeholder="Enter today's cycles" oninput="updateInput()" />
+  <div id="percent" style="margin-top:10px;"></div>
 
-    <!-- Progress -->
-    <div class="percent" id="percent">0%</div>
-    <div class="bar">
-      <div class="fill" id="fill"></div>
-    </div>
-
-    <!-- Buttons -->
-    <div class="row">
-      <button class="save" onclick="save()">Save Today</button>
-      <button class="reset" onclick="resetAll()">Reset</button>
-    </div>
-
-    <div class="total" id="total"></div>
-
-    <div id="logs"></div>
-
+  <div class="bar">
+    <div class="fill" id="fill"></div>
   </div>
+
+  <div class="row">
+    <button class="save" onclick="save()">Save</button>
+    <button class="reset" onclick="resetAll()">Reset</button>
+  </div>
+
+  <p id="total"></p>
+
+  <div id="logs"></div>
+
+</div>
 </div>
 
 <script>
@@ -206,21 +145,33 @@ let trackers = JSON.parse(localStorage.getItem("trackers")) || [
 ];
 
 let active = 0;
+let editing = null;
 
 function saveData() {
   localStorage.setItem("trackers", JSON.stringify(trackers));
 }
 
+/* SWITCH TAB */
 function switchTab(i) {
   active = i;
   render();
 }
 
-function renameTab(i, value) {
-  trackers[i].name = value;
-  saveData();
+/* START EDIT NAME */
+function startEdit(i) {
+  editing = i;
+  render();
 }
 
+/* SAVE NAME */
+function saveName(i, val) {
+  trackers[i].name = val || "Unnamed";
+  editing = null;
+  saveData();
+  render();
+}
+
+/* INPUT */
 function updateInput() {
   let val = document.getElementById("cycleInput")
     .value.replace(/[^0-9]/g, "");
@@ -229,6 +180,7 @@ function updateInput() {
   saveData();
 }
 
+/* SAVE DAY */
 function save() {
   let today = new Date().toLocaleDateString();
 
@@ -244,6 +196,7 @@ function save() {
   render();
 }
 
+/* RESET */
 function resetAll() {
   if (confirm("Reset everything?")) {
     trackers = [
@@ -256,6 +209,15 @@ function resetAll() {
   }
 }
 
+/* CLICK OUTSIDE = STOP EDIT */
+document.addEventListener("click", () => {
+  if (editing !== null) {
+    editing = null;
+    render();
+  }
+});
+
+/* RENDER */
 function render() {
   let t = trackers[active];
 
@@ -263,7 +225,6 @@ function render() {
   let percent = Math.min((total / TARGET) * 100, 100);
 
   document.getElementById("title").innerText = t.name;
-
   document.getElementById("cycleInput").value = t.today;
 
   document.getElementById("percent").innerText =
@@ -272,28 +233,36 @@ function render() {
   document.getElementById("fill").style.width = percent + "%";
 
   document.getElementById("total").innerText =
-    "Total: " + total.toLocaleString() + " / " + TARGET.toLocaleString();
+    "Total: " + total.toLocaleString();
 
-  /* Tabs */
-  let tabsHTML = "";
+  /* TABS */
+  let html = "";
+
   trackers.forEach((t, i) => {
-    tabsHTML += `
-      <div class="tab ${i === active ? "active" : ""}">
-        <input 
-          value="${t.name}"
-          oninput="renameTab(${i}, this.value)"
-          onclick="switchTab(${i})"
-        />
+    html += `
+      <div class="tab ${i === active ? "active" : ""}"
+           onclick="switchTab(${i})"
+           ondblclick="startEdit(${i})">
+
+        ${
+          editing === i
+            ? `<input autofocus
+                value="${t.name}"
+                onblur="saveName(${i}, this.value)"
+                onkeydown="if(event.key==='Enter'){this.blur()}">`
+            : t.name
+        }
+
       </div>
     `;
   });
 
-  document.getElementById("tabs").innerHTML = tabsHTML;
+  document.getElementById("tabs").innerHTML = html;
 
-  /* Logs */
-  let logHTML = "";
+  /* LOGS */
+  let logs = "";
   t.logs.forEach(l => {
-    logHTML += `
+    logs += `
       <div class="log">
         <span>${l.date}</span>
         <span>${Number(l.cycles).toLocaleString()}</span>
@@ -301,7 +270,7 @@ function render() {
     `;
   });
 
-  document.getElementById("logs").innerHTML = logHTML;
+  document.getElementById("logs").innerHTML = logs;
 }
 
 render();
