@@ -7,7 +7,7 @@
 <style>
   body {
     margin: 0;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     background: radial-gradient(circle at top, #111, #000);
     color: gold;
     display: flex;
@@ -15,62 +15,100 @@
     padding: 25px;
   }
 
-  .container { width: 100%; max-width: 650px; }
+  .container {
+    width: 100%;
+    max-width: 700px;
+  }
 
   .card {
     background: rgba(20, 20, 20, 0.95);
-    border-radius: 18px;
+    border-radius: 20px;
     padding: 20px;
-    border: 1px solid rgba(255, 215, 0, 0.2);
+    border: 1px solid rgba(255,215,0,0.2);
+    box-shadow: 0 0 20px rgba(255,215,0,0.08);
   }
 
-  .tabs {
+  /* TOP BAR */
+  .topBar {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
   }
 
-  .tab {
+  .nameInput {
     flex: 1;
-    background: #1a1a1a;
+    background: #111;
     border: 1px solid #333;
     border-radius: 12px;
-    padding: 10px;
+    padding: 12px;
+    color: gold;
+    font-size: 16px;
+    outline: none;
+  }
+
+  .nameInput:focus {
+    border-color: gold;
+    box-shadow: 0 0 10px rgba(255,215,0,0.25);
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
     text-align: center;
     cursor: pointer;
-    user-select: none;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    transition: 0.2s;
+    font-weight: bold;
   }
 
   .tab.active {
     background: gold;
     color: black;
+    box-shadow: 0 0 15px rgba(255,215,0,0.45);
   }
 
-  .tab input {
-    width: 100%;
-    border: none;
-    background: transparent;
-    color: inherit;
-    text-align: center;
-    font-weight: bold;
-    outline: none;
-    font-size: 14px;
+  h1 {
+    margin: 10px 0;
+    font-size: 28px;
   }
 
-  h1 { margin: 10px 0; }
-
-  input#cycleInput {
+  /* CYCLE INPUT */
+  #cycleInput {
     width: 100%;
-    font-size: 34px;
-    padding: 12px;
-    border-radius: 12px;
+    font-size: 40px;
+    padding: 14px;
+    border-radius: 14px;
     border: 1px solid #333;
     background: #0d0d0d;
     color: gold;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  #cycleInput:focus {
+    border-color: gold;
+    box-shadow: 0 0 12px rgba(255,215,0,0.25);
+  }
+
+  /* PROGRESS */
+  .percent {
+    margin-top: 12px;
+    color: #ccc;
+    font-size: 15px;
   }
 
   .bar {
-    height: 14px;
+    width: 100%;
+    height: 16px;
     background: #222;
     border-radius: 20px;
     overflow: hidden;
@@ -79,61 +117,117 @@
 
   .fill {
     height: 100%;
-    background: gold;
     width: 0%;
-    transition: width 0.3s;
+    background: linear-gradient(90deg, #ffd700, #ffb300);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 12px rgba(255,215,0,0.5);
   }
 
-  .row { display: flex; gap: 10px; margin-top: 15px; }
+  /* BUTTONS */
+  .row {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+  }
 
   button {
     flex: 1;
-    padding: 12px;
-    border-radius: 12px;
+    padding: 14px;
     border: none;
+    border-radius: 14px;
     font-weight: bold;
     cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s;
   }
 
-  .save { background: gold; }
-  .reset { background: darkred; color: white; }
+  button:hover {
+    transform: scale(1.02);
+  }
+
+  .save {
+    background: gold;
+    color: black;
+  }
+
+  .danger {
+    background: darkred;
+    color: white;
+  }
+
+  /* TOTAL */
+  .total {
+    margin-top: 12px;
+    color: #aaa;
+    font-size: 15px;
+  }
+
+  /* LOGS */
+  .logs {
+    margin-top: 15px;
+  }
 
   .log {
     display: flex;
     justify-content: space-between;
-    padding: 8px;
-    border-bottom: 1px solid #222;
+    padding: 12px;
+    background: #111;
+    border-radius: 10px;
+    margin-top: 6px;
+    border: 1px solid #222;
   }
+
 </style>
 </head>
 
 <body>
 
 <div class="container">
-<div class="card">
+  <div class="card">
 
-  <div class="tabs" id="tabs"></div>
+    <!-- EASY TAB NAME EDIT -->
+    <div class="topBar">
+      <input
+        id="tabNameInput"
+        class="nameInput"
+        placeholder="Counter Name"
+        oninput="renameActiveTab()"
+      />
+    </div>
 
-  <h1 id="title"></h1>
+    <!-- TABS -->
+    <div class="tabs" id="tabs"></div>
 
-  <input id="cycleInput" oninput="updateInput()" placeholder="Enter cycles" />
+    <!-- TITLE -->
+    <h1 id="title"></h1>
 
-  <div id="percent" style="margin-top:10px;"></div>
+    <!-- CYCLE INPUT -->
+    <input
+      id="cycleInput"
+      placeholder="Enter today's cycles"
+      oninput="updateInput()"
+    />
 
-  <div class="bar">
-    <div class="fill" id="fill"></div>
+    <!-- PROGRESS -->
+    <div class="percent" id="percent"></div>
+
+    <div class="bar">
+      <div class="fill" id="fill"></div>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="row">
+      <button class="save" onclick="save()">Save Today</button>
+      <button class="danger" onclick="resetAll()">TOTAL RESET</button>
+    </div>
+
+    <!-- TOTAL -->
+    <div class="total" id="total"></div>
+
+    <!-- LOGS -->
+    <div class="logs" id="logs"></div>
+
   </div>
-
-  <div class="row">
-    <button class="save" onclick="save()">Save</button>
-    <button class="reset" onclick="resetAll()">Reset</button>
-  </div>
-
-  <p id="total"></p>
-
-  <div id="logs"></div>
-
-</div>
 </div>
 
 <script>
@@ -145,46 +239,44 @@ let trackers = JSON.parse(localStorage.getItem("trackers")) || [
 ];
 
 let active = 0;
-let editing = null;
 
 function saveData() {
   localStorage.setItem("trackers", JSON.stringify(trackers));
 }
 
-/* SWITCH TAB */
+/* SWITCH TABS */
 function switchTab(i) {
   active = i;
   render();
 }
 
-/* START EDIT NAME */
-function startEdit(i) {
-  editing = i;
-  render();
-}
+/* EASY TAB RENAME */
+function renameActiveTab() {
+  trackers[active].name =
+    document.getElementById("tabNameInput").value || "Unnamed";
 
-/* SAVE NAME */
-function saveName(i, val) {
-  trackers[i].name = val || "Unnamed";
-  editing = null;
   saveData();
-  render();
+  renderTabs();
 }
 
-/* INPUT */
+/* UPDATE INPUT */
 function updateInput() {
-  let val = document.getElementById("cycleInput")
-    .value.replace(/[^0-9]/g, "");
+  let val = document
+    .getElementById("cycleInput")
+    .value
+    .replace(/[^0-9]/g, "");
 
   trackers[active].today = val;
+
   saveData();
 }
 
-/* SAVE DAY */
+/* SAVE DAILY LOG */
 function save() {
   let today = new Date().toLocaleDateString();
 
-  trackers[active].logs = trackers[active].logs.filter(l => l.date !== today);
+  trackers[active].logs =
+    trackers[active].logs.filter(l => l.date !== today);
 
   trackers[active].logs.unshift({
     date: today,
@@ -192,77 +284,81 @@ function save() {
   });
 
   trackers[active].today = "";
+
   saveData();
   render();
 }
 
-/* RESET */
+/* TOTAL RESET */
 function resetAll() {
-  if (confirm("Reset everything?")) {
+  if (confirm("⚠️ DELETE ALL COUNTERS AND LOGS?")) {
+
     trackers = [
       { name: "Counter 1", today: "", logs: [] },
       { name: "Counter 2", today: "", logs: [] }
     ];
+
     active = 0;
+
     saveData();
     render();
   }
 }
 
-/* CLICK OUTSIDE = STOP EDIT */
-document.addEventListener("click", () => {
-  if (editing !== null) {
-    editing = null;
-    render();
-  }
-});
-
-/* RENDER */
-function render() {
-  let t = trackers[active];
-
-  let total = t.logs.reduce((s, l) => s + Number(l.cycles), 0);
-  let percent = Math.min((total / TARGET) * 100, 100);
-
-  document.getElementById("title").innerText = t.name;
-  document.getElementById("cycleInput").value = t.today;
-
-  document.getElementById("percent").innerText =
-    percent.toFixed(2) + "% Complete";
-
-  document.getElementById("fill").style.width = percent + "%";
-
-  document.getElementById("total").innerText =
-    "Total: " + total.toLocaleString();
-
-  /* TABS */
+/* RENDER TABS */
+function renderTabs() {
   let html = "";
 
   trackers.forEach((t, i) => {
     html += `
-      <div class="tab ${i === active ? "active" : ""}"
-           onclick="switchTab(${i})"
-           ondblclick="startEdit(${i})">
-
-        ${
-          editing === i
-            ? `<input autofocus
-                value="${t.name}"
-                onblur="saveName(${i}, this.value)"
-                onkeydown="if(event.key==='Enter'){this.blur()}">`
-            : t.name
-        }
-
+      <div
+        class="tab ${i === active ? "active" : ""}"
+        onclick="switchTab(${i})"
+      >
+        ${t.name}
       </div>
     `;
   });
 
   document.getElementById("tabs").innerHTML = html;
+}
+
+/* FULL RENDER */
+function render() {
+
+  let t = trackers[active];
+
+  let total =
+    t.logs.reduce((s, l) => s + Number(l.cycles), 0);
+
+  let percent =
+    Math.min((total / TARGET) * 100, 100);
+
+  renderTabs();
+
+  document.getElementById("title").innerText = t.name;
+
+  document.getElementById("tabNameInput").value = t.name;
+
+  document.getElementById("cycleInput").value = t.today;
+
+  document.getElementById("percent").innerText =
+    percent.toFixed(2) + "% Complete";
+
+  document.getElementById("fill").style.width =
+    percent + "%";
+
+  document.getElementById("total").innerText =
+    "Total: " +
+    total.toLocaleString() +
+    " / " +
+    TARGET.toLocaleString();
 
   /* LOGS */
-  let logs = "";
+  let logsHTML = "";
+
   t.logs.forEach(l => {
-    logs += `
+    logsHTML += `
       <div class="log">
         <span>${l.date}</span>
         <span>${Number(l.cycles).toLocaleString()}</span>
@@ -270,7 +366,7 @@ function render() {
     `;
   });
 
-  document.getElementById("logs").innerHTML = logs;
+  document.getElementById("logs").innerHTML = logsHTML;
 }
 
 render();
