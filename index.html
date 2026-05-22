@@ -1,152 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Cycle Tracker</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: black;
-      color: gold;
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-    }
+<meta charset="UTF-8" />
+<title>Cycle Tracker Pro</title>
 
-    .container {
-      width: 100%;
-      max-width: 600px;
-      background: #111;
-      padding: 20px;
-      border-radius: 15px;
-    }
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #111, #000);
+    color: #ffd700;
+    display: flex;
+    justify-content: center;
+    padding: 25px;
+  }
 
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
+  .container {
+    width: 100%;
+    max-width: 650px;
+  }
 
-    .tab {
-      flex: 1;
-      padding: 10px;
-      background: #222;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
+  /* GLASS CARD */
+  .card {
+    background: rgba(20, 20, 20, 0.9);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.05);
+    backdrop-filter: blur(10px);
+  }
 
-    .tab.active {
-      background: gold;
-      color: black;
-    }
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
 
-    .tab input {
-      width: 100%;
-      background: transparent;
-      border: none;
-      color: inherit;
-      text-align: center;
-      font-weight: bold;
-      outline: none;
-      font-size: 14px;
-    }
+  .tab {
+    flex: 1;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+  }
 
-    input#cycleInput {
-      width: 100%;
-      font-size: 30px;
-      padding: 10px;
-      background: transparent;
-      border: 1px solid #333;
-      color: gold;
-      outline: none;
-    }
+  .tab.active {
+    background: gold;
+    color: black;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  }
 
-    .bar {
-      width: 100%;
-      height: 10px;
-      background: #333;
-      border-radius: 5px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
+  .tab input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: inherit;
+    text-align: center;
+    font-weight: bold;
+    outline: none;
+  }
 
-    .fill {
-      height: 10px;
-      background: gold;
-      width: 0%;
-    }
+  /* TITLE */
+  h1 {
+    margin: 10px 0;
+    font-size: 26px;
+  }
 
-    button {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      margin-top: 10px;
-    }
+  /* INPUT */
+  input#cycleInput {
+    width: 100%;
+    font-size: 34px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    background: #0d0d0d;
+    color: gold;
+    outline: none;
+  }
 
-    .row {
-      display: flex;
-      gap: 10px;
-    }
+  /* PROGRESS */
+  .percent {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #ccc;
+  }
 
-    .reset {
-      background: darkred;
-      color: white;
-    }
+  .bar {
+    width: 100%;
+    height: 14px;
+    background: #222;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
 
-    .save {
-      background: gold;
-    }
+  .fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffd700, #ffb300);
+    width: 0%;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
 
-    .log {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px;
-      border-bottom: 1px solid #222;
-    }
+  /* BUTTONS */
+  .row {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
 
-    .title {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
+  button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+  }
 
-    .percent {
-      margin-top: 10px;
-      color: white;
-    }
-  </style>
+  .save {
+    background: gold;
+    color: black;
+  }
+
+  .save:hover {
+    transform: scale(1.03);
+  }
+
+  .reset {
+    background: #8b0000;
+    color: white;
+  }
+
+  .reset:hover {
+    transform: scale(1.03);
+  }
+
+  /* TOTAL */
+  .total {
+    margin-top: 10px;
+    color: #aaa;
+    font-size: 14px;
+  }
+
+  /* LOGS */
+  .log {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin-top: 6px;
+    background: #111;
+    border-radius: 10px;
+    border: 1px solid #222;
+  }
+
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <div class="tabs" id="tabs"></div>
+  <div class="card">
 
-  <div class="title" id="title"></div>
+    <!-- Tabs -->
+    <div class="tabs" id="tabs"></div>
 
-  <input id="cycleInput" placeholder="Enter today's cycles" oninput="updateInput()" />
+    <!-- Title -->
+    <h1 id="title"></h1>
 
-  <div class="percent" id="percent">0% Complete</div>
+    <!-- Input -->
+    <input id="cycleInput" placeholder="Enter today's cycles" oninput="updateInput()" />
 
-  <div class="bar">
-    <div class="fill" id="fill"></div>
+    <!-- Progress -->
+    <div class="percent" id="percent">0%</div>
+    <div class="bar">
+      <div class="fill" id="fill"></div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="row">
+      <button class="save" onclick="save()">Save Today</button>
+      <button class="reset" onclick="resetAll()">Reset</button>
+    </div>
+
+    <div class="total" id="total"></div>
+
+    <div id="logs"></div>
+
   </div>
-
-  <div class="row">
-    <button class="save" onclick="save()">Save Today</button>
-    <button class="reset" onclick="resetAll()">Reset</button>
-  </div>
-
-  <p id="total"></p>
-
-  <div id="logs"></div>
-
 </div>
 
 <script>
@@ -163,30 +211,24 @@ function saveData() {
   localStorage.setItem("trackers", JSON.stringify(trackers));
 }
 
-/* TAB SWITCH */
 function switchTab(i) {
   active = i;
   render();
 }
 
-/* EDIT TAB NAME */
 function renameTab(i, value) {
   trackers[i].name = value;
   saveData();
-  render();
 }
 
-/* INPUT */
 function updateInput() {
-  let val = document
-    .getElementById("cycleInput")
+  let val = document.getElementById("cycleInput")
     .value.replace(/[^0-9]/g, "");
 
   trackers[active].today = val;
   saveData();
 }
 
-/* SAVE DAY */
 function save() {
   let today = new Date().toLocaleDateString();
 
@@ -198,12 +240,10 @@ function save() {
   });
 
   trackers[active].today = "";
-
   saveData();
   render();
 }
 
-/* RESET */
 function resetAll() {
   if (confirm("Reset everything?")) {
     trackers = [
@@ -216,7 +256,6 @@ function resetAll() {
   }
 }
 
-/* RENDER UI */
 function render() {
   let t = trackers[active];
 
@@ -235,14 +274,13 @@ function render() {
   document.getElementById("total").innerText =
     "Total: " + total.toLocaleString() + " / " + TARGET.toLocaleString();
 
-  /* TABS */
+  /* Tabs */
   let tabsHTML = "";
   trackers.forEach((t, i) => {
     tabsHTML += `
       <div class="tab ${i === active ? "active" : ""}">
         <input 
           value="${t.name}"
-          onfocus="this.select()"
           oninput="renameTab(${i}, this.value)"
           onclick="switchTab(${i})"
         />
@@ -252,7 +290,7 @@ function render() {
 
   document.getElementById("tabs").innerHTML = tabsHTML;
 
-  /* LOGS */
+  /* Logs */
   let logHTML = "";
   t.logs.forEach(l => {
     logHTML += `
