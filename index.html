@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Cycle Tracker Pro</title>
+<title>Cycle Tracker</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 * {
@@ -218,7 +218,7 @@ button:hover {
 
   <div class="card">
 
-    <h2>Counter Settings</h2>
+    <h2>Damper Serial Number</h2>
 
     <input
       id="counterName"
@@ -290,7 +290,7 @@ button:hover {
 
   <div class="card">
 
-    <h2>Production Graph</h2>
+    <h2>Progress Graph</h2>
 
     <div class="chartWrap">
       <canvas id="productionChart"></canvas>
@@ -313,12 +313,12 @@ const TARGET = 1000000;
 
 let trackers = JSON.parse(localStorage.getItem('trackers')) || [
   {
-    name: 'Counter 1',
+    name: 'Damper 1',
     today: '',
     logs: []
   },
   {
-    name: 'Counter 2',
+    name: 'Damper 2',
     today: '',
     logs: []
   }
@@ -396,12 +396,12 @@ function resetAll() {
 
     trackers = [
       {
-        name: 'Counter 1',
+        name: 'Damper 1',
         today: '',
         logs: []
       },
       {
-        name: 'Counter 2',
+        name: 'Damper 2',
         today: '',
         logs: []
       }
