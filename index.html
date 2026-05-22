@@ -32,19 +32,30 @@
       flex: 1;
       padding: 10px;
       background: #222;
-      border: none;
-      color: gold;
-      cursor: pointer;
       border-radius: 8px;
-      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
     }
 
-    .active {
+    .tab.active {
       background: gold;
       color: black;
     }
 
-    input {
+    .tab input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: inherit;
+      text-align: center;
+      font-weight: bold;
+      outline: none;
+      font-size: 14px;
+    }
+
+    input#cycleInput {
       width: 100%;
       font-size: 30px;
       padding: 10px;
@@ -115,14 +126,11 @@
 
 <div class="container">
 
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab(0)">Counter 1</button>
-    <button class="tab" onclick="switchTab(1)">Counter 2</button>
-  </div>
+  <div class="tabs" id="tabs"></div>
 
-  <div class="title" id="title">Counter 1</div>
+  <div class="title" id="title"></div>
 
-  <input id="input" placeholder="Enter today's cycles" oninput="updateInput()" />
+  <input id="cycleInput" placeholder="Enter today's cycles" oninput="updateInput()" />
 
   <div class="percent" id="percent">0% Complete</div>
 
@@ -155,23 +163,30 @@ function saveData() {
   localStorage.setItem("trackers", JSON.stringify(trackers));
 }
 
+/* TAB SWITCH */
 function switchTab(i) {
   active = i;
-
-  document.querySelectorAll(".tab").forEach((t, idx) => {
-    t.classList.toggle("active", idx === i);
-  });
-
   render();
 }
 
-function updateInput() {
-  let val = document.getElementById("input").value.replace(/[^0-9]/g, "");
-  trackers[active].today = val;
+/* EDIT TAB NAME */
+function renameTab(i, value) {
+  trackers[i].name = value;
   saveData();
   render();
 }
 
+/* INPUT */
+function updateInput() {
+  let val = document
+    .getElementById("cycleInput")
+    .value.replace(/[^0-9]/g, "");
+
+  trackers[active].today = val;
+  saveData();
+}
+
+/* SAVE DAY */
 function save() {
   let today = new Date().toLocaleDateString();
 
@@ -188,17 +203,20 @@ function save() {
   render();
 }
 
+/* RESET */
 function resetAll() {
   if (confirm("Reset everything?")) {
     trackers = [
       { name: "Counter 1", today: "", logs: [] },
       { name: "Counter 2", today: "", logs: [] }
     ];
+    active = 0;
     saveData();
     render();
   }
 }
 
+/* RENDER UI */
 function render() {
   let t = trackers[active];
 
@@ -207,7 +225,7 @@ function render() {
 
   document.getElementById("title").innerText = t.name;
 
-  document.getElementById("input").value = t.today;
+  document.getElementById("cycleInput").value = t.today;
 
   document.getElementById("percent").innerText =
     percent.toFixed(2) + "% Complete";
@@ -217,6 +235,24 @@ function render() {
   document.getElementById("total").innerText =
     "Total: " + total.toLocaleString() + " / " + TARGET.toLocaleString();
 
+  /* TABS */
+  let tabsHTML = "";
+  trackers.forEach((t, i) => {
+    tabsHTML += `
+      <div class="tab ${i === active ? "active" : ""}">
+        <input 
+          value="${t.name}"
+          onfocus="this.select()"
+          oninput="renameTab(${i}, this.value)"
+          onclick="switchTab(${i})"
+        />
+      </div>
+    `;
+  });
+
+  document.getElementById("tabs").innerHTML = tabsHTML;
+
+  /* LOGS */
   let logHTML = "";
   t.logs.forEach(l => {
     logHTML += `
