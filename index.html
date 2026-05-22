@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cycle Tracker</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: black;
+      color: gold;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background: #111;
+      padding: 20px;
+      border-radius: 15px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      background: #222;
+      border: none;
+      color: gold;
+      cursor: pointer;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .active {
+      background: gold;
+      color: black;
+    }
+
+    input {
+      width: 100%;
+      font-size: 30px;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid #333;
+      color: gold;
+      outline: none;
+    }
+
+    .bar {
+      width: 100%;
+      height: 10px;
+      background: #333;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .fill {
+      height: 10px;
+      background: gold;
+      width: 0%;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .reset {
+      background: darkred;
+      color: white;
+    }
+
+    .save {
+      background: gold;
+    }
+
+    .log {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      border-bottom: 1px solid #222;
+    }
+
+    .title {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .percent {
+      margin-top: 10px;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(0)">Counter 1</button>
+    <button class="tab" onclick="switchTab(1)">Counter 2</button>
+  </div>
+
+  <div class="title" id="title">Counter 1</div>
+
+  <input id="input" placeholder="Enter today's cycles" oninput="updateInput()" />
+
+  <div class="percent" id="percent">0% Complete</div>
+
+  <div class="bar">
+    <div class="fill" id="fill"></div>
+  </div>
+
+  <div class="row">
+    <button class="save" onclick="save()">Save Today</button>
+    <button class="reset" onclick="resetAll()">Reset</button>
+  </div>
+
+  <p id="total"></p>
+
+  <div id="logs"></div>
+
+</div>
+
+<script>
+const TARGET = 1000000;
+
+let trackers = JSON.parse(localStorage.getItem("trackers")) || [
+  { name: "Counter 1", today: "", logs: [] },
+  { name: "Counter 2", today: "", logs: [] }
+];
+
+let active = 0;
+
+function saveData() {
+  localStorage.setItem("trackers", JSON.stringify(trackers));
+}
+
+function switchTab(i) {
+  active = i;
+
+  document.querySelectorAll(".tab").forEach((t, idx) => {
+    t.classList.toggle("active", idx === i);
+  });
+
+  render();
+}
+
+function updateInput() {
+  let val = document.getElementById("input").value.replace(/[^0-9]/g, "");
+  trackers[active].today = val;
+  saveData();
+  render();
+}
+
+function save() {
+  let today = new Date().toLocaleDateString();
+
+  trackers[active].logs = trackers[active].logs.filter(l => l.date !== today);
+
+  trackers[active].logs.unshift({
+    date: today,
+    cycles: Number(trackers[active].today || 0)
+  });
+
+  trackers[active].today = "";
+
+  saveData();
+  render();
+}
+
+function resetAll() {
+  if (confirm("Reset everything?")) {
+    trackers = [
+      { name: "Counter 1", today: "", logs: [] },
+      { name: "Counter 2", today: "", logs: [] }
+    ];
+    saveData();
+    render();
+  }
+}
+
+function render() {
+  let t = trackers[active];
+
+  let total = t.logs.reduce((s, l) => s + Number(l.cycles), 0);
+  let percent = Math.min((total / TARGET) * 100, 100);
+
+  document.getElementById("title").innerText = t.name;
+
+  document.getElementById("input").value = t.today;
+
+  document.getElementById("percent").innerText =
+    percent.toFixed(2) + "% Complete";
+
+  document.getElementById("fill").style.width = percent + "%";
+
+  document.getElementById("total").innerText =
+    "Total: " + total.toLocaleString() + " / " + TARGET.toLocaleString();
+
+  let logHTML = "";
+  t.logs.forEach(l => {
+    logHTML += `
+      <div class="log">
+        <span>${l.date}</span>
+        <span>${Number(l.cycles).toLocaleString()}</span>
+      </div>
+    `;
+  });
+
+  document.getElementById("logs").innerHTML = logHTML;
+}
+
+render();
+</script>
+
+</body>
+</html>
