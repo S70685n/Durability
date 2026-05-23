@@ -377,15 +377,41 @@ function quickAdd(amount) {
 function saveToday() {
   let tracker = activeTracker();
 
+  let currentReading = Number(tracker.today || 0);
+
+  if (!tracker.lastMachineReading) {
+    tracker.lastMachineReading = 0;
+  }
+
+  let addedCycles = 0;
+
+  /* NORMAL COUNTING */
+  if (currentReading >= tracker.lastMachineReading) {
+    addedCycles = currentReading - tracker.lastMachineReading;
+  }
+
+  /* MACHINE RESET DETECTED */
+  else {
+    addedCycles = currentReading;
+  }
+
+  tracker.totalAccumulated =
+    (tracker.totalAccumulated || 0) + addedCycles;
+
+  tracker.lastMachineReading = currentReading;
+
   let now = new Date();
 
   tracker.logs.unshift({
     date: now.toLocaleDateString(),
-    time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    cycles: Number(tracker.today || 0)
+    time: now.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit'
+    }),
+    machineReading: currentReading,
+    addedCycles: addedCycles,
+    totalAfterEntry: tracker.totalAccumulated
   });
-
-  tracker.today = '';
 
   saveData();
   render();
@@ -439,7 +465,7 @@ function updateChart(logs) {
 
   const values = [...logs]
     .reverse()
-    .map(l => l.cycles);
+    .map(l => l.addedCycles || 0);
 
   const ctx = document.getElementById('productionChart');
 
@@ -491,7 +517,7 @@ function render() {
 
   let t = activeTracker();
 
-  let total = t.logs.reduce((sum, l) => sum + Number(l.cycles), 0);
+  let total = t.totalAccumulated || 0;
 
   let percent = Math.min((total / TARGET) * 100, 100);
 
@@ -529,7 +555,8 @@ function render() {
         </div>
 
         <div>
-          ${Number(l.cycles).toLocaleString()}
+          Machine: ${Number(l.machineReading || 0).toLocaleString()}<br>
+          Added: +${Number(l.addedCycles || 0).toLocaleString()}
         </div>
       </div>
     `;
