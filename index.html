@@ -241,7 +241,7 @@ canvas{
   <!-- SETTINGS -->
   <div class="card">
 
-    <h2>Damper Serial Number</h2>
+    <h2>Enter Damper Serial Number</h2>
 
     <input
       id="counterName"
@@ -355,9 +355,7 @@ canvas{
 
 const TARGET = 1000000;
 
-let trackers =
-JSON.parse(localStorage.getItem("trackers")) || [
-
+let trackers = JSON.parse(localStorage.getItem("trackers")) || [
   {
     name:"Damper Serial Number",
     today:"",
@@ -382,10 +380,7 @@ let chart;
 /* SAVE */
 
 function saveData(){
-  localStorage.setItem(
-    "trackers",
-    JSON.stringify(trackers)
-  );
+  localStorage.setItem("trackers",JSON.stringify(trackers));
 }
 
 /* ACTIVE */
@@ -537,8 +532,7 @@ function saveEntry(){
 
   tracker.totalAccumulated += addedCycles;
 
-  tracker.lastMachineReading =
-    currentReading;
+  tracker.lastMachineReading = currentReading;
 
   let now = new Date();
 
