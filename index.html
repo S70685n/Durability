@@ -2,239 +2,262 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Cycle Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Durability Cycle Tracker</title>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
-* {
-  box-sizing: border-box;
+
+*{
+  box-sizing:border-box;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: radial-gradient(circle at top, #151515, #000);
-  color: gold;
-  padding: 20px;
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:radial-gradient(circle at top,#151515,#000);
+  color:gold;
+  padding:20px;
 }
 
-.container {
-  max-width: 900px;
-  margin: auto;
+.container{
+  max-width:950px;
+  margin:auto;
 }
 
-.card {
-  background: rgba(20,20,20,0.95);
-  border: 1px solid rgba(255,215,0,0.15);
-  border-radius: 20px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 0 20px rgba(255,215,0,0.06);
+.card{
+  background:rgba(20,20,20,.95);
+  border:1px solid rgba(255,215,0,.15);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 0 20px rgba(255,215,0,.05);
 }
 
-h1,h2,h3 {
-  margin-top: 0;
+h1,h2,h3{
+  margin-top:0;
 }
 
-.tabs {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
+.tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
 }
 
-.tab {
-  padding: 12px 16px;
-  border-radius: 12px;
-  background: #1b1b1b;
-  border: 1px solid #333;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.2s;
+.tab{
+  padding:12px 16px;
+  border-radius:12px;
+  background:#1a1a1a;
+  border:1px solid #333;
+  cursor:pointer;
+  transition:.2s;
+  font-weight:bold;
 }
 
-.tab.active {
-  background: gold;
-  color: black;
-  box-shadow: 0 0 12px rgba(255,215,0,0.4);
+.tab.active{
+  background:gold;
+  color:black;
+  box-shadow:0 0 12px rgba(255,215,0,.4);
 }
 
-.topRow {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
+.topRow{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
 }
 
-.kpi {
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 16px;
-  padding: 18px;
+.kpi{
+  background:#111;
+  border:1px solid #222;
+  border-radius:16px;
+  padding:18px;
 }
 
-.kpiTitle {
-  color: #aaa;
-  font-size: 13px;
+.kpiTitle{
+  color:#999;
+  font-size:13px;
 }
 
-.kpiValue {
-  font-size: 28px;
-  margin-top: 8px;
-  font-weight: bold;
+.kpiValue{
+  margin-top:8px;
+  font-size:28px;
+  font-weight:bold;
 }
 
-.nameInput,
-#cycleInput {
-  width: 100%;
-  padding: 14px;
-  border-radius: 14px;
-  background: #0f0f0f;
-  border: 1px solid #333;
-  color: gold;
-  outline: none;
+input{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #333;
+  background:#0f0f0f;
+  color:gold;
+  outline:none;
 }
 
-.nameInput:focus,
-#cycleInput:focus {
-  border-color: gold;
+input:focus{
+  border-color:gold;
 }
 
-#cycleInput {
-  font-size: 36px;
+#cycleInput{
+  font-size:36px;
 }
 
-.progressWrap {
-  margin-top: 15px;
+.progressWrap{
+  margin-top:15px;
 }
 
-.progressBar {
-  width: 100%;
-  height: 18px;
-  background: #222;
-  border-radius: 20px;
-  overflow: hidden;
+.progressText{
+  color:#bbb;
+  margin-bottom:8px;
 }
 
-.progressFill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #ffd700, #ff9f00);
-  transition: width 0.3s ease;
-  box-shadow: 0 0 10px rgba(255,215,0,0.5);
+.progressBar{
+  width:100%;
+  height:18px;
+  background:#222;
+  border-radius:20px;
+  overflow:hidden;
 }
 
-.buttonRow {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 15px;
+.progressFill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#ffd700,#ff9f00);
+  transition:.3s;
+  box-shadow:0 0 12px rgba(255,215,0,.45);
 }
 
-button {
-  border: none;
-  border-radius: 14px;
-  padding: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
+.buttonRow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:15px;
 }
 
-button:hover {
-  transform: scale(1.02);
+button{
+  border:none;
+  border-radius:14px;
+  padding:14px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.primary {
-  background: gold;
-  color: black;
+button:hover{
+  transform:scale(1.02);
 }
 
-.secondary {
-  background: #222;
-  color: gold;
-  border: 1px solid #333;
+.primary{
+  background:gold;
+  color:black;
 }
 
-.danger {
-  background: darkred;
-  color: white;
+.secondary{
+  background:#222;
+  color:gold;
+  border:1px solid #333;
 }
 
-.quickButtons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-  flex-wrap: wrap;
+.danger{
+  background:darkred;
+  color:white;
 }
 
-.quickButtons button {
-  flex: 1;
-  min-width: 90px;
+.quickButtons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
 }
 
-.logs {
-  margin-top: 15px;
+.quickButtons button{
+  flex:1;
+  min-width:90px;
 }
 
-.log {
-  display: flex;
-  justify-content: space-between;
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 12px;
-  padding: 12px;
-  margin-top: 8px;
+.logs{
+  margin-top:15px;
 }
 
-.chartWrap {
-  margin-top: 20px;
+.log{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#111;
+  border:1px solid #222;
+  border-radius:12px;
+  padding:12px;
+  margin-top:8px;
 }
 
-.small {
-  color: #aaa;
-  font-size: 13px;
+.small{
+  color:#999;
+  font-size:12px;
 }
 
-@media (max-width: 700px) {
-  #cycleInput {
-    font-size: 28px;
+canvas{
+  margin-top:15px;
+}
+
+@media(max-width:700px){
+
+  #cycleInput{
+    font-size:28px;
   }
+
 }
+
 </style>
 </head>
 <body>
 
 <div class="container">
 
+  <!-- COUNTERS -->
   <div class="card">
 
     <div class="tabs" id="tabs"></div>
 
     <div class="buttonRow">
-      <button class="secondary" onclick="addCounter()">+ Add Counter</button>
-      <button class="danger" onclick="resetAll()">TOTAL RESET</button>
+
+      <button class="secondary" onclick="addCounter()">
+        + Add Counter
+      </button>
+
+      <button class="danger" onclick="resetCurrentCounter()">
+        Reset Current Counter
+      </button>
+
+      <button class="danger" onclick="deleteCounter()">
+        Delete Counter
+      </button>
+
     </div>
 
   </div>
 
+  <!-- SETTINGS -->
   <div class="card">
 
     <h2>Damper Serial Number</h2>
 
     <input
       id="counterName"
-      class="nameInput"
       placeholder="Counter Name"
       oninput="renameCounter()"
     />
 
   </div>
 
+  <!-- KPI -->
   <div class="card">
 
     <div class="topRow">
 
       <div class="kpi">
-        <div class="kpiTitle">Accumulated</div>
+        <div class="kpiTitle">Accumulated Total</div>
         <div class="kpiValue" id="totalCycles">0</div>
       </div>
 
@@ -244,60 +267,80 @@ button:hover {
       </div>
 
       <div class="kpi">
-        <div class="kpiTitle">Average / Day</div>
-        <div class="kpiValue" id="avgPerDay">0</div>
+        <div class="kpiTitle">Remaining</div>
+        <div class="kpiValue" id="remaining">0</div>
       </div>
 
       <div class="kpi">
-        <div class="kpiTitle">Remaining</div>
-        <div class="kpiValue" id="remaining">0</div>
+        <div class="kpiTitle">Average Entry</div>
+        <div class="kpiValue" id="avgPerDay">0</div>
       </div>
 
     </div>
 
   </div>
 
+  <!-- INPUT -->
   <div class="card">
 
     <h2>Today's Cycles</h2>
 
     <input
       id="cycleInput"
-      placeholder="Enter cycles"
+      placeholder="Enter current reading"
       oninput="updateInput()"
     />
 
     <div class="quickButtons">
-      <button class="secondary" onclick="quickAdd(100)">+100</button>
-      <button class="secondary" onclick="quickAdd(500)">+500</button>
-      <button class="secondary" onclick="quickAdd(1000)">+1000</button>
-      <button class="secondary" onclick="quickAdd(5000)">+5000</button>
+
+      <button class="secondary" onclick="quickAdd(100)">
+        +100
+      </button>
+
+      <button class="secondary" onclick="quickAdd(500)">
+        +500
+      </button>
+
+      <button class="secondary" onclick="quickAdd(1000)">
+        +1000
+      </button>
+
+      <button class="secondary" onclick="quickAdd(5000)">
+        +5000
+      </button>
+
     </div>
 
     <div class="progressWrap">
-      <div class="small" id="progressText"></div>
+
+      <div class="progressText" id="progressText"></div>
 
       <div class="progressBar">
         <div class="progressFill" id="progressFill"></div>
       </div>
+
     </div>
 
     <div class="buttonRow">
-      <button class="primary" onclick="saveToday()">Save Today</button>
+
+      <button class="primary" onclick="saveEntry()">
+        Save Entry
+      </button>
+
     </div>
 
   </div>
 
+  <!-- GRAPH -->
   <div class="card">
 
-    <h2>Progress Graph</h2>
+    <h2>Progress To 1,000,000</h2>
 
-    <div class="chartWrap">
-      <canvas id="productionChart"></canvas>
-    </div>
+    <canvas id="progressChart"></canvas>
 
   </div>
 
+  <!-- LOGS -->
   <div class="card">
 
     <h2>Daily Logs</h2>
@@ -309,42 +352,87 @@ button:hover {
 </div>
 
 <script>
+
 const TARGET = 1000000;
 
-let trackers = JSON.parse(localStorage.getItem('trackers')) || [
+let trackers =
+JSON.parse(localStorage.getItem("trackers")) || [
+
   {
-    name: 'Damper 1',
-    today: '',
-    logs: []
+    name:"Damper Serial Number",
+    today:"",
+    logs:[],
+    totalAccumulated:0,
+    lastMachineReading:0
   },
+
   {
-    name: 'Damper 2',
-    today: '',
-    logs: []
+    name:"Damper Serial Number",
+    today:"",
+    logs:[],
+    totalAccumulated:0,
+    lastMachineReading:0
   }
+
 ];
 
 let active = 0;
 let chart;
 
-function saveData() {
-  localStorage.setItem('trackers', JSON.stringify(trackers));
+/* SAVE */
+
+function saveData(){
+  localStorage.setItem(
+    "trackers",
+    JSON.stringify(trackers)
+  );
 }
 
-function activeTracker() {
+/* ACTIVE */
+
+function current(){
   return trackers[active];
 }
 
-function switchTab(index) {
-  active = index;
+/* TABS */
+
+function switchTab(i){
+  active = i;
   render();
 }
 
-function addCounter() {
+function renderTabs(){
+
+  let html = "";
+
+  trackers.forEach((t,i)=>{
+
+    html += `
+      <div
+        class="tab ${i===active ? "active" : ""}"
+        onclick="switchTab(${i})"
+      >
+        ${t.name}
+      </div>
+    `;
+
+  });
+
+  document.getElementById("tabs").innerHTML = html;
+}
+
+/* ADD */
+
+function addCounter(){
+
   trackers.push({
-    name: `Counter ${trackers.length + 1}`,
-    today: '',
-    logs: []
+
+    name:`Counter ${trackers.length+1}`,
+    today:"",
+    logs:[],
+    totalAccumulated:0,
+    lastMachineReading:0
+
   });
 
   active = trackers.length - 1;
@@ -353,221 +441,329 @@ function addCounter() {
   render();
 }
 
-function renameCounter() {
-  activeTracker().name = document.getElementById('counterName').value || 'Unnamed';
-  saveData();
-  renderTabs();
-}
+/* DELETE */
 
-function updateInput() {
-  let val = document.getElementById('cycleInput').value.replace(/[^0-9]/g, '');
+function deleteCounter(){
 
-  activeTracker().today = val;
-  saveData();
-}
+  if(trackers.length === 1){
 
-function quickAdd(amount) {
-  let current = Number(activeTracker().today || 0);
-  activeTracker().today = current + amount;
+    alert("Cannot delete last counter.");
+    return;
 
-  saveData();
-  render();
-}
-
-function saveToday() {
-  let tracker = activeTracker();
-
-  let currentReading = Number(tracker.today || 0);
-
-  if (!tracker.lastMachineReading) {
-    tracker.lastMachineReading = 0;
   }
 
-  let addedCycles = 0;
+  if(confirm("Delete this counter permanently?")){
 
-  /* NORMAL COUNTING */
-  if (currentReading >= tracker.lastMachineReading) {
-    addedCycles = currentReading - tracker.lastMachineReading;
-  }
-
-  /* MACHINE RESET DETECTED */
-  else {
-    addedCycles = currentReading;
-  }
-
-  tracker.totalAccumulated =
-    (tracker.totalAccumulated || 0) + addedCycles;
-
-  tracker.lastMachineReading = currentReading;
-
-  let now = new Date();
-
-  tracker.logs.unshift({
-    date: now.toLocaleDateString(),
-    time: now.toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit'
-    }),
-    machineReading: currentReading,
-    addedCycles: addedCycles,
-    totalAfterEntry: tracker.totalAccumulated
-  });
-
-  saveData();
-  render();
-}
-
-function resetAll() {
-  if (confirm('DELETE ALL COUNTERS AND LOGS?')) {
-
-    trackers = [
-      {
-        name: 'Damper 1',
-        today: '',
-        logs: []
-      },
-      {
-        name: 'Damper 2',
-        today: '',
-        logs: []
-      }
-    ];
+    trackers.splice(active,1);
 
     active = 0;
 
     saveData();
     render();
+
   }
+
 }
 
-function renderTabs() {
-  let html = '';
+/* RENAME */
 
-  trackers.forEach((t, i) => {
-    html += `
-      <div
-        class="tab ${i === active ? 'active' : ''}"
-        onclick="switchTab(${i})"
-      >
-        ${t.name}
-      </div>
-    `;
+function renameCounter(){
+
+  current().name =
+    document.getElementById("counterName").value
+    || "Unnamed";
+
+  saveData();
+  renderTabs();
+}
+
+/* INPUT */
+
+function updateInput(){
+
+  let val =
+    document.getElementById("cycleInput")
+    .value
+    .replace(/[^0-9]/g,"");
+
+  current().today = val;
+
+  saveData();
+}
+
+/* QUICK ADD */
+
+function quickAdd(amount){
+
+  let c = Number(current().today || 0);
+
+  current().today = c + amount;
+
+  saveData();
+  render();
+}
+
+/* SAVE ENTRY */
+
+function saveEntry(){
+
+  let tracker = current();
+
+  let currentReading =
+    Number(tracker.today || 0);
+
+  let addedCycles = 0;
+
+  /* NORMAL COUNT */
+
+  if(
+    currentReading >=
+    tracker.lastMachineReading
+  ){
+
+    addedCycles =
+      currentReading -
+      tracker.lastMachineReading;
+
+  }
+
+  /* MACHINE RESET */
+
+  else{
+
+    addedCycles = currentReading;
+
+  }
+
+  tracker.totalAccumulated += addedCycles;
+
+  tracker.lastMachineReading =
+    currentReading;
+
+  let now = new Date();
+
+  tracker.logs.unshift({
+
+    date:now.toLocaleDateString(),
+
+    time:now.toLocaleTimeString([],{
+      hour:"2-digit",
+      minute:"2-digit"
+    }),
+
+    machineReading:currentReading,
+
+    addedCycles:addedCycles,
+
+    accumulated:
+      tracker.totalAccumulated
+
   });
 
-  document.getElementById('tabs').innerHTML = html;
+  tracker.today = "";
+
+  saveData();
+  render();
 }
 
-function updateChart(logs) {
+/* RESET CURRENT */
 
-  const labels = [...logs]
+function resetCurrentCounter(){
+
+  if(confirm("Reset ONLY current counter?")){
+
+    trackers[active] = {
+
+      name:trackers[active].name,
+
+      today:"",
+      logs:[],
+      totalAccumulated:0,
+      lastMachineReading:0
+
+    };
+
+    saveData();
+    render();
+
+  }
+
+}
+
+/* GRAPH */
+
+function updateChart(logs){
+
+  let labels =
+    [...logs]
     .reverse()
-    .map(l => l.date);
+    .map(l=>`${l.date}`);
 
-  const values = [...logs]
+  let values =
+    [...logs]
     .reverse()
-    .map(l => l.addedCycles || 0);
+    .map(l=>l.accumulated);
 
-  const ctx = document.getElementById('productionChart');
+  const ctx =
+    document.getElementById("progressChart");
 
-  if (chart) chart.destroy();
+  if(chart){
+    chart.destroy();
+  }
 
-  chart = new Chart(ctx, {
-    type: 'line',
-    data: {
+  chart = new Chart(ctx,{
+
+    type:"line",
+
+    data:{
       labels,
-      datasets: [{
-        label: 'Cycles',
-        data: values,
-        borderWidth: 3,
-        tension: 0.3
+
+      datasets:[{
+
+        label:"Accumulated Total",
+
+        data:values,
+
+        borderWidth:3,
+
+        tension:.3
+
       }]
     },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          labels: {
-            color: 'gold'
+
+    options:{
+
+      responsive:true,
+
+      plugins:{
+        legend:{
+          labels:{
+            color:"gold"
           }
         }
       },
-      scales: {
-        x: {
-          ticks: {
-            color: 'gold'
-          },
-          grid: {
-            color: '#222'
-          }
+
+      scales:{
+
+        x:{
+          ticks:{ color:"gold" },
+          grid:{ color:"#222" }
         },
-        y: {
-          ticks: {
-            color: 'gold'
-          },
-          grid: {
-            color: '#222'
-          }
+
+        y:{
+          ticks:{ color:"gold" },
+          grid:{ color:"#222" }
         }
+
       }
+
     }
+
   });
+
 }
 
-function render() {
+/* RENDER */
 
-  let t = activeTracker();
+function render(){
 
-  let total = t.totalAccumulated || 0;
+  let t = current();
 
-  let percent = Math.min((total / TARGET) * 100, 100);
+  let total =
+    t.totalAccumulated || 0;
 
-  let avg = t.logs.length
+  let percent =
+    Math.min(
+      (total / TARGET) * 100,
+      100
+    );
+
+  let avg =
+    t.logs.length
     ? Math.round(total / t.logs.length)
     : 0;
 
   renderTabs();
 
-  document.getElementById('counterName').value = t.name;
+  document.getElementById("counterName").value =
+    t.name;
 
-  document.getElementById('cycleInput').value = t.today;
+  document.getElementById("cycleInput").value =
+    t.today;
 
-  document.getElementById('totalCycles').innerText = total.toLocaleString();
+  document.getElementById("totalCycles").innerText =
+    total.toLocaleString();
 
-  document.getElementById('progressPercent').innerText = percent.toFixed(2) + '%';
+  document.getElementById("progressPercent").innerText =
+    percent.toFixed(2) + "%";
 
-  document.getElementById('avgPerDay').innerText = avg.toLocaleString();
+  document.getElementById("remaining").innerText =
+    (TARGET-total).toLocaleString();
 
-  document.getElementById('remaining').innerText = (TARGET - total).toLocaleString();
+  document.getElementById("avgPerDay").innerText =
+    avg.toLocaleString();
 
-  document.getElementById('progressText').innerText =
+  document.getElementById("progressText").innerText =
     `${total.toLocaleString()} / ${TARGET.toLocaleString()}`;
 
-  document.getElementById('progressFill').style.width = percent + '%';
+  document.getElementById("progressFill").style.width =
+    percent + "%";
 
-  let logsHTML = '';
+  /* LOGS */
 
-  t.logs.forEach(l => {
-    logsHTML += `
+  let html = "";
+
+  t.logs.forEach(l=>{
+
+    html += `
+
       <div class="log">
+
         <div>
+
           <div>${l.date}</div>
-          <div class="small">${l.time}</div>
+
+          <div class="small">
+            ${l.time}
+          </div>
+
         </div>
 
         <div>
-          Machine: ${Number(l.machineReading || 0).toLocaleString()}<br>
-          Added: +${Number(l.addedCycles || 0).toLocaleString()}
+
+          <div>
+            Machine:
+            ${Number(
+              l.machineReading
+            ).toLocaleString()}
+          </div>
+
+          <div class="small">
+
+            Added:
+            +${Number(
+              l.addedCycles
+            ).toLocaleString()}
+
+          </div>
+
         </div>
+
       </div>
+
     `;
+
   });
 
-  document.getElementById('logs').innerHTML = logsHTML;
+  document.getElementById("logs").innerHTML =
+    html;
 
   updateChart(t.logs);
+
 }
 
 render();
+
 </script>
 
 </body>
