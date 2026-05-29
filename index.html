@@ -526,12 +526,35 @@ function saveEntry(){
 
   let addedCycles = 0;
 
-  /* NORMAL COUNT */
+  /*
+    MACHINE RESET DETECTION
+
+    If current reading is LOWER than
+    previous reading, machine was reset
+    back to zero.
+
+    In that case:
+    just add current reading directly.
+  */
 
   if(
-    currentReading >=
+    currentReading <
     tracker.lastMachineReading
   ){
+
+    // MACHINE RESET
+    addedCycles = currentReading;
+
+  }
+
+  else{
+
+    /*
+      NORMAL RUNNING
+
+      Calculate only NEW cycles
+      since last save.
+    */
 
     addedCycles =
       currentReading -
@@ -539,15 +562,21 @@ function saveEntry(){
 
   }
 
-  /* MACHINE RESET */
+  /*
+    IMPORTANT FIX:
 
-  else{
+    NEVER subtract old logged totals.
 
-    addedCycles = currentReading;
-
-  }
+    Only ADD newly completed cycles
+    to accumulated total.
+  */
 
   tracker.totalAccumulated += addedCycles;
+
+  /*
+    Update last machine reading
+    to current physical machine value
+  */
 
   tracker.lastMachineReading =
     currentReading;
@@ -558,14 +587,14 @@ function saveEntry(){
 
     date: new Date().toISOString().split("T")[0],
 
-    time:now.toLocaleTimeString([],{
+    time: now.toLocaleTimeString([],{
       hour:"2-digit",
       minute:"2-digit"
     }),
 
-    machineReading:currentReading,
+    machineReading: currentReading,
 
-    addedCycles:addedCycles,
+    addedCycles: addedCycles,
 
     accumulated:
       tracker.totalAccumulated
