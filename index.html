@@ -365,6 +365,12 @@ let trackers = JSON.parse(localStorage.getItem("trackers")) || [
     lastMachineReading:0
   },
 
+  {
+    name:"Unnamed",
+    today:"",
+    logs:[],
+    totalAccumulated:0,
+    lastMachineReading:0
   }
 
 ];
@@ -425,7 +431,7 @@ function addCounter(){
 
       // STARTING BASELINE ENTRY
       {
-  date: now.toISOString().split("T")[0],
+  date: now.toLocaleDateString('en-CA'),
   time: now.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit"
@@ -550,7 +556,7 @@ function saveEntry(){
 
   tracker.logs.unshift({
 
-    date: new Date().toISOString().split("T")[0],
+    date: now.toLocaleDateString('en-CA'),
 
     time:now.toLocaleTimeString([],{
       hour:"2-digit",
@@ -594,7 +600,7 @@ function resetCurrentCounter(){
     // ADD NEW START LOG
     c.logs.push({
 
-      date: now.toISOString().split("T")[0],
+      date: now.toLocaleDateString('en-CA'),
 
       time: now.toLocaleTimeString([], {
         hour: "2-digit",
