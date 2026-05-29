@@ -272,7 +272,7 @@ canvas{
       </div>
 
       <div class="kpi">
-        <div class="kpiTitle">Average Entry</div>
+        <div class="kpiTitle">Average Per Day</div>
         <div class="kpiValue" id="avgPerDay">0</div>
       </div>
 
@@ -540,7 +540,7 @@ function saveEntry(){
 
   tracker.logs.unshift({
 
-    date:now.toLocaleDateString(),
+    date: new Date().toISOString().split("T")[0],
 
     time:now.toLocaleTimeString([],{
       hour:"2-digit",
@@ -674,11 +674,14 @@ function render(){
       100
     );
 
-  let avg =
-    t.logs.length
-    ? Math.round(total / t.logs.length)
-    : 0;
+  let uniqueDays = new Set(
+  t.logs.map(l => l.date)
+).size;
 
+let avg =
+  uniqueDays
+  ? Math.round(total / uniqueDays)
+  : 0;
   renderTabs();
 
   document.getElementById("counterName").value =
