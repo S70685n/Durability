@@ -421,11 +421,24 @@ function renderTabs(){
 
 function addCounter(){
 
+  let now = new Date();
+
   trackers.push({
 
     name:`Counter ${trackers.length+1}`,
     today:"",
-    logs:[],
+    logs:[
+
+      // STARTING BASELINE ENTRY
+      {
+        date: now.toISOString().split("T")[0],
+        time: "START",
+        machineReading: 0,
+        addedCycles: 0,
+        accumulated: 0
+      }
+
+    ],
     totalAccumulated:0,
     lastMachineReading:0
 
