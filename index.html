@@ -241,11 +241,11 @@ canvas{
   <!-- SETTINGS -->
   <div class="card">
 
-    <h2>Enter Damper Serial Number</h2>
+    <h2>Enter Damper Serial Number:</h2>
 
     <input
       id="counterName"
-      placeholder="Counter Name"
+      placeholder="Serial Number"
       oninput="renameCounter()"
     />
 
@@ -275,57 +275,6 @@ canvas{
         <div class="kpiTitle">Average Entry</div>
         <div class="kpiValue" id="avgPerDay">0</div>
       </div>
-
-    </div>
-
-  </div>
-
-  <!-- INPUT -->
-  <div class="card">
-
-    <h2>Today's Cycles</h2>
-
-    <input
-      id="cycleInput"
-      placeholder="Enter current reading"
-      oninput="updateInput()"
-    />
-
-    <div class="quickButtons">
-
-      <button class="secondary" onclick="quickAdd(100)">
-        +100
-      </button>
-
-      <button class="secondary" onclick="quickAdd(500)">
-        +500
-      </button>
-
-      <button class="secondary" onclick="quickAdd(1000)">
-        +1000
-      </button>
-
-      <button class="secondary" onclick="quickAdd(5000)">
-        +5000
-      </button>
-
-    </div>
-
-    <div class="progressWrap">
-
-      <div class="progressText" id="progressText"></div>
-
-      <div class="progressBar">
-        <div class="progressFill" id="progressFill"></div>
-      </div>
-
-    </div>
-
-    <div class="buttonRow">
-
-      <button class="primary" onclick="saveEntry()">
-        Save Entry
-      </button>
 
     </div>
 
@@ -376,6 +325,57 @@ let trackers = JSON.parse(localStorage.getItem("trackers")) || [
 
 let active = 0;
 let chart;
+
+  <!-- INPUT -->
+  <div class="card">
+
+    <h2>Today's Cycles Entry:</h2>
+
+    <input
+      id="cycleInput"
+      placeholder="Enter current reading"
+      oninput="updateInput()"
+    />
+
+    <div class="quickButtons">
+
+      <button class="secondary" onclick="quickAdd(100)">
+        +100
+      </button>
+
+      <button class="secondary" onclick="quickAdd(500)">
+        +500
+      </button>
+
+      <button class="secondary" onclick="quickAdd(1000)">
+        +1000
+      </button>
+
+      <button class="secondary" onclick="quickAdd(5000)">
+        +5000
+      </button>
+
+    </div>
+
+    <div class="progressWrap">
+
+      <div class="progressText" id="progressText"></div>
+
+      <div class="progressBar">
+        <div class="progressFill" id="progressFill"></div>
+      </div>
+
+    </div>
+
+    <div class="buttonRow">
+
+      <button class="primary" onclick="saveEntry()">
+        Save Entry
+      </button>
+
+    </div>
+
+  </div>  
 
 /* SAVE */
 
