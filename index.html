@@ -425,7 +425,7 @@ function addCounter(){
 
   trackers.push({
 
-    name:`Counter ${trackers.length+1}`,
+    name:`New Test{trackers.length+1}`,
     today:"",
     logs:[
 
@@ -582,36 +582,38 @@ function saveEntry(){
 
 function resetCurrentCounter(){
 
-  if(confirm("Reset ONLY current counter?")){
+  if(confirm("Reset ONLY current counter? This will wipe all data.")){
 
     let c = trackers[active];
     let now = new Date();
 
-    // ADD RESET LOG BEFORE WIPING DATA
-    c.logs.unshift({
+    // COMPLETELY WIPE DATA
+    c.logs = [];
+    c.totalAccumulated = 0;
+    c.lastMachineReading = 0;
+    c.today = "";
+    c.input = "";
+
+    // ADD NEW START LOG
+    c.logs.push({
 
       date: now.toISOString().split("T")[0],
 
-      time: now.toLocaleTimeString([],{
-        hour:"2-digit",
-        minute:"2-digit"
+      time: now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
       }),
 
       machineReading: 0,
       addedCycles: 0,
-      accumulated: c.totalAccumulated,
-      note: "RESET",
-      restart: true
+      accumulated: 0,
+      note: "START"
 
     });
 
-    // NOW RESET COUNTER STATE
-    c.totalAccumulated = 0;
-    c.lastMachineReading = 0;
-    c.today = "";
-
     saveData();
     render();
+
   }
 
 }
