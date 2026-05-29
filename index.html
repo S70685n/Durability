@@ -584,20 +584,34 @@ function resetCurrentCounter(){
 
   if(confirm("Reset ONLY current counter?")){
 
-    trackers[active] = {
+    let c = trackers[active];
+    let now = new Date();
 
-      name:trackers[active].name,
+    // ADD RESET LOG BEFORE WIPING DATA
+    c.logs.unshift({
 
-      today:"",
-      logs:[],
-      totalAccumulated:0,
-      lastMachineReading:0
+      date: now.toISOString().split("T")[0],
 
-    };
+      time: now.toLocaleTimeString([],{
+        hour:"2-digit",
+        minute:"2-digit"
+      }),
+
+      machineReading: 0,
+      addedCycles: 0,
+      accumulated: c.totalAccumulated,
+      note: "RESET",
+      restart: true
+
+    });
+
+    // NOW RESET COUNTER STATE
+    c.totalAccumulated = 0;
+    c.lastMachineReading = 0;
+    c.today = "";
 
     saveData();
     render();
-
   }
 
 }
