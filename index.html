@@ -425,7 +425,7 @@ function addCounter(){
 
   trackers.push({
 
-    name:`New Test{trackers.length+1}`,
+    name:`New Test`,
     today:"",
     logs:[
 
@@ -593,6 +593,9 @@ function resetCurrentCounter(){
     c.lastMachineReading = 0;
     c.today = "";
     c.input = "";
+
+    // RESET NAME BACK TO DEFAULT
+    c.name = `New Test`;
 
     // ADD NEW START LOG
     c.logs.push({
