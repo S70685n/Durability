@@ -431,13 +431,16 @@ function addCounter(){
 
       // STARTING BASELINE ENTRY
       {
-        date: now.toISOString().split("T")[0],
-        time: "START",
-        machineReading: 0,
-        addedCycles: 0,
-        accumulated: 0
-      }
-
+  date: now.toISOString().split("T")[0],
+  time: now.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  }),
+  machineReading: 0,
+  addedCycles: 0,
+  accumulated: 0
+}
+      
     ],
     totalAccumulated:0,
     lastMachineReading:0
